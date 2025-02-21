@@ -1,0 +1,21 @@
+{
+  "name": "Build refs/heads/main with GeyserMC build (.build)",
+  "version": "refs/heads/main",
+  "tags": [
+    "portiz93/geysermc-proxy:refs/heads/main-767",
+    "portiz93/geysermc-proxy:refs/heads/main",
+    "portiz93/geysermc-proxy:767",
+    "portiz93/geysermc-proxy:latest"
+  ],
+  "geyser": {
+    "version": "2.6.1",
+    "build": 767,
+    "head_sha": "fd4c80598ed40c2069b2ccc83c39e3fe1cc46aef",
+    "time": "2025-02-20T16:11:28.749Z",
+    "artifact": {
+      "name": "Geyser-Standalone.jar",
+      "url": "https://download.geysermc.org/v2/projects/geyser/versions/2.6.1/builds/767/downloads/standalone",
+      "sha256": "8faa43893cc0622f41592dc9d79ef251b454e47d51ddccf3bba0e079be786e4f"
+    }
+  }
+}
