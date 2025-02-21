@@ -1,32 +1,19 @@
 name: Build
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # This runs the action every 24 hours
-  push:
-    tags:
-      - '*'  # Triggers on any new tag
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - '.github/workflows/scripts/get-geyser-latest-build-info.sh'
-  #     - '.github/workflows/scripts/download-geyser-config.sh'
-  #     - '.github/workflows/scripts/generate-dockerfile.sh'
-  #     - '.github/workflows/scripts/pre-build.sh'
-  #     - '.github/workflows/build.yml'
-  #     - 'templates/Dockerfile.template'
-  #     - 'scripts/**'
-  #   paths-ignore:
-  #     - 'templates/geyer_config.template.yml'
-  #     - 'build-info.json'
-  #     - 'Dockerfile'
-  #     - 'README.md'
+  workflow_run:
+    workflows: ["Generate release"]
+    types:
+      - completed
 
 env:
   REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy
 
 jobs:
   update-latest-build-info:
+    if: ${{ github.event.workflow_run.conclusion == 'success' ||  github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     outputs:
       build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
