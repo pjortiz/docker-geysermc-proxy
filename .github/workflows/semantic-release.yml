@@ -1,0 +1,41 @@
+name: Generate release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'templates/geyser_config.template.yml'
+      - 'build-info.json'
+      - 'Dockerfile'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.releaserc.json'
+  
+permissions:
+  contents: read # for checkout
+
+jobs:
+  release:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install Dependencies
+        run: npm install --global semantic-release
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: semantic-release

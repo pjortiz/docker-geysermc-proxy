@@ -1,0 +1,162 @@
+name: Build Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/scripts/**'
+      - 'templates/Dockerfile.template'
+      - 'scripts/**'
+
+env:
+  VERSION: ${{ github.event.pull_request.head.ref }}
+
+jobs:
+  test-update-latest-build-info:
+    runs-on: ubuntu-latest
+    outputs:
+      build_info: ${{ steps.pre-build.outputs.build_info }}
+      DOCKERFILE: ${{ steps.pre-build.outputs.DOCKERFILE }}
+      GEYSER_CONFIG_TEMPLATE: ${{ steps.pre-build.outputs.GEYSER_CONFIG_TEMPLATE }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Pre-build
+        id: pre-build
+        run: |
+          ./.github/workflows/scripts/pre-build.sh || exit 1
+          echo "GEYSER_CONFIG_TEMPLATE=$(cat templates/geyser_config.template.yml)" >> "$GITHUB_OUTPUT"
+          echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
+          echo "DOCKERFILE=$(cat Dockerfile)" >> "$GITHUB_OUTPUT"
+        env:
+          REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
+
+      - name: Handle Pre-build failure
+        uses: actions/github-script@v6
+        if: failure()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const commentBody = `
+              ### Pre-build Failure
+              The pre-build for this pull request failed.
+            `;
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });
+
+      - name: Create PR comment with generated files
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const dockerfile = fs.readFileSync('Dockerfile', 'utf8');
+            const readme = fs.readFileSync('README.md', 'utf8');
+            const prNumber = context.payload.pull_request.number;
+            const commentBody = `
+              ### Generated Dockerfile
+              \`\`\`dockerfile
+              ${dockerfile}
+              \`\`\`
+              ### Generated README
+              \`\`\`markdown
+              ${readme}
+              \`\`\`
+            `;
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });
+
+  test-build:
+    needs: test-update-latest-build-info
+    if: success()
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.test-update-latest-build-info.outputs.build_info) }}
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Pull latest
+        run: git pull origin main
+
+      - name: Set Generated files
+        run: |
+          echo "${{ needs.test-update-latest-build-info.outputs.DOCKERFILE }}" > Dockerfile
+          echo "${{ needs.test-update-latest-build-info.outputs.GEYSER_CONFIG_TEMPLATE }}" > templates/geyser_config.template.yml
+      
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          provenance: mode=max
+          sbom: true
+          platforms: |-
+            linux/amd64
+            linux/arm64/v8
+          tags: |-
+            ${{ join(matrix.tags, '
+            ') }}
+          build-args: |
+            JAVA_VERSION=17
+            IMAGE_VERSION=${{ matrix.version }}
+            GEYSER_VERSION=${{ matrix.geyser.version }}
+            GEYSER_BUILD=${{ matrix.geyser.build }}
+            GEYSER_DOWNLOAD_URL=${{ matrix.geyser.artifact.url }}
+            GEYSER_JAR_SHA256=${{ matrix.geyser.artifact.sha256 }}
+
+      - name: Post build success comment
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const commentBody = `
+              ### Build Success
+              The build for this pull request was successful.
+            `;
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });
+            
+      - name: Post build failure comment
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const commentBody = `
+              ### Build Failure
+              The build for this pull request failed.
+            `;
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: prNumber,
+              body: commentBody
+            });

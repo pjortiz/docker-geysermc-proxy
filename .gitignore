@@ -1,1 +1,10 @@
+.venv
+.temp
+.vscode
+*.code-workspace
 
+# Generated files
+Dockerfile
+README.md
+templates/geyser_config.template.yml
+build-info.json

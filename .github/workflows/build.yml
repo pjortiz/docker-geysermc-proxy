@@ -1,0 +1,121 @@
+name: Build
+on:
+  schedule:
+    - cron: '0 0 * * *' # This runs the action every 24 hours
+  push:
+    tags:
+      - '*'  # Triggers on any new tag
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - '.github/workflows/scripts/get-geyser-latest-build-info.sh'
+  #     - '.github/workflows/scripts/download-geyser-config.sh'
+  #     - '.github/workflows/scripts/generate-dockerfile.sh'
+  #     - '.github/workflows/scripts/pre-build.sh'
+  #     - '.github/workflows/build.yml'
+  #     - 'templates/Dockerfile.template'
+  #     - 'scripts/**'
+  #   paths-ignore:
+  #     - 'templates/geyer_config.template.yml'
+  #     - 'build-info.json'
+  #     - 'Dockerfile'
+  #     - 'README.md'
+
+env:
+  REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy
+
+jobs:
+  update-latest-build-info:
+    runs-on: ubuntu-latest
+    outputs:
+      build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
+      build_info: ${{ steps.pre-build.outputs.build_info }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get Version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Pre-build
+        id: pre-build
+        run: ./.github/workflows/scripts/pre-build.sh
+
+      - name: Check for build info updates
+        id: updates
+        if: success()
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add --force build-info.json templates/geyser_config.template.yml Dockerfile README.md
+          if git diff --cached --exit-code; then
+            echo "No changes to commit"
+            echo "build_info_updated=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changes detected"
+            echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
+            echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
+
+      - name: Commit and push changes
+        if: steps.updates.outputs.build_info_updated == 'true'
+        run: |
+          git commit -m "build: Update build_info and generated files: $VERSION"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  build:
+    needs: update-latest-build-info
+    if: success() && needs.update-latest-build-info.outputs.build_info_updated == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.update-latest-build-info.outputs.build_info) }}
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Pull latest
+        run: git pull origin main
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          provenance: mode=max
+          sbom: true
+          platforms: |-
+            linux/amd64
+            linux/arm64/v8
+          tags: |-
+            ${{ join(matrix.tags, '
+            ') }}
+          build-args: |
+            JAVA_VERSION=17
+            IMAGE_VERSION=${{ matrix.version }}
+            GEYSER_VERSION=${{ matrix.geyser.version }}
+            GEYSER_BUILD=${{ matrix.geyser.build }}
+            GEYSER_DOWNLOAD_URL=${{ matrix.geyser.artifact.url }}
+            GEYSER_JAR_SHA256=${{ matrix.geyser.artifact.sha256 }}
+      
+      
