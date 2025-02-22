@@ -34,12 +34,15 @@ jobs:
           elif [ "${{ github.event.inputs.branch }}" == "prerelease" ]; then
             VERSION=$(curl -s -L https://api.github.com/repos/${{ github.repository }}/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
           fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" # Sanity check
 
       - name: Get Version from release
         id: get-version-from-release
         if: github.event_name == 'release'
         run: |
           echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" # Sanity check
 
       - name: Get Version from schedule
         id: get-version-from-schedule
@@ -47,6 +50,7 @@ jobs:
         run: |
           VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" # Sanity check
 
       - name: Set Final Version Output
         id: set-version
@@ -56,8 +60,7 @@ jobs:
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-        env:
-          VERSION: ${{ env.VERSION }}
+          echo "VERSION=$VERSION" # Sanity check
 
   get-branch-from-event:
     name: Get branch from event
