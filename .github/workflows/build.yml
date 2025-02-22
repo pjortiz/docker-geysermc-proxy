@@ -149,8 +149,7 @@ jobs:
     if: ${{ needs.update-latest-build-info.result == 'success' && ( github.event_name != 'schedule' || needs.update-latest-build-info.outputs.build_info_updated == 'true' ) }}
     strategy:
       fail-fast: true
-      matrix:
-        include: ${{ fromJson(needs.update-latest-build-info.outputs.build_info) }}
+      matrix: ${{ fromJson(needs.update-latest-build-info.outputs.build_info) }}
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     steps:
