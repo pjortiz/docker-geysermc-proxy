@@ -158,19 +158,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Pull latest
         run: git pull origin main
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          image: tonistiigi/binfmt:latest
+        # with:
+        #   image: tonistiigi/binfmt:latest
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: your-dockerhub-username/your-image
+          labels: |
+            org.opencontainers.image.description=${{ github.event.repository.description }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.documentation=https://hub.docker.com/r/${{ env.REGISTRY_IMAGE }}
+          flavor: latest=true
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -190,5 +205,16 @@ jobs:
             GEYSER_BUILD=${{ matrix.geyser.build }}
             GEYSER_DOWNLOAD_URL=${{ matrix.geyser.artifact.url }}
             GEYSER_JAR_SHA256=${{ matrix.geyser.artifact.sha256 }}
+            
+      - name: Update Docker Hub README
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.REGISTRY_IMAGE }}
+          readme-filepath: ./README.md
+          short-description: ${{ github.event.repository.description }}
+
+
       
       
