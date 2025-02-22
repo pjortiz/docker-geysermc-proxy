@@ -134,7 +134,9 @@ jobs:
             echo "Changes detected"
             echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "build_info=\"$(jq -c '{ include: [(.)] }' build-info.json)\"" >> "$GITHUB_OUTPUT"
+          build_info=$(jq -c '{ include: [(.)] }' build-info.json)
+          echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
+          echo "build_info=$build_info" # Sanity check
 
       - name: Commit and push changes
         if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
