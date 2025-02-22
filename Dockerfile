@@ -12,8 +12,8 @@ ARG GEYSER_JAR_SHA256
 LABEL org.opencontainers.image.authors="Peter Ortiz (https://github.com/pjortiz)"
 
 # Java Start Options
-ENV INIT_MEMORY "1024M"
-ENV MAX_MEMORY "1024M"
+ENV INIT_MEMORY="1024M"
+ENV MAX_MEMORY="1024M"
 
 # Set Version Variables
 ENV IMAGE_VERSION=${IMAGE_VERSION}
