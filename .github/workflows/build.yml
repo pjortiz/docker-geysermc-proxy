@@ -50,8 +50,12 @@ jobs:
 
       - name: Set Final Version Output
         id: set-version
-        if: env.VERSION != ''
-        run: echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        run: |
+          if [ -z "$VERSION" ]; then
+            echo "No version found"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
   get-branch-from-event:
     name: Get branch from event
@@ -124,8 +128,8 @@ jobs:
           else
             echo "Changes detected"
             echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
-            echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
           fi
+          echo "build_info=\"$(jq -c '{ include: [(.)] }' build-info.json)\"" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push changes
         if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
