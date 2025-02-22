@@ -117,7 +117,7 @@ jobs:
         id: pre-build
         run: |
           ./.github/workflows/scripts/pre-build.sh
-          build_info=$(jq -c '{ include: [(.)] }' build-info.json)
+          build_info="$(jq -r '{ include: [(.)] }' build-info.json)"
           echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
           echo "build_info=$build_info" # Sanity check
         env:
