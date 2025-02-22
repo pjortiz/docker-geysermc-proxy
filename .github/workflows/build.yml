@@ -99,7 +99,7 @@ jobs:
     needs: [get-version-from-event, get-branch-from-event]
     runs-on: ubuntu-latest
     outputs:
-      build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
+      build_info_updated: ${{ steps.updates-check.outputs.build_info_updated }}
       build_info: ${{ steps.pre-build.outputs.build_info }}
     steps:
       - name: Checkout repository
@@ -125,7 +125,7 @@ jobs:
           REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
 
       - name: Check for build info updates
-        id: updates
+        id: updates-check
         if: ${{ success() }}
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -140,7 +140,7 @@ jobs:
           fi
 
       - name: Commit and push changes
-        if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
+        if: ${{ steps.updates-check.outputs.build_info_updated == 'true' }}
         run: |
           git commit -m "build: Update build_info and generated files: $VERSION"
           git push origin main
