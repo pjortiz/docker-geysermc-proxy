@@ -3,30 +3,49 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # This runs the action every 24 hours
-  workflow_run:
-    workflows: ["Generate release"]
-    types:
-      - completed
+  release:
+    types: [published]
 
 env:
   REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy
 
 jobs:
   update-latest-build-info:
-    if: ${{ github.event.workflow_run.conclusion == 'success' ||  github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     outputs:
       build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
       build_info: ${{ steps.pre-build.outputs.build_info }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Determine branch from Release event
+        if: ${{ github.event_name == 'release' }}
+        id: branch-release
+        run: |
+          if [ "${{ github.event.release.prerelease }}" != "true" ]; then
+            echo "BRANCH=main" >> $GITHUB_ENV
+          else
+            echo "BRANCH=prerelease" >> $GITHUB_ENV
+          fi
+      - name: Determine branch default
+        if: ${{ github.event_name != 'release' }}
+        id: branch-default
+        run: |
+          echo "BRANCH=main" >> $GITHUB_ENV
 
       - name: Get Version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
+          fi
 
+      - name: Checkout repository
+        if: ${{ always() && steps.*.outputs.BRANCH != '' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.*.outputs.BRANCH }}
+          fetch-depth: 0
+ 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -38,7 +57,7 @@ jobs:
 
       - name: Check for build info updates
         id: updates
-        if: success()
+        if: ${{ success() }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -55,7 +74,7 @@ jobs:
           REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
 
       - name: Commit and push changes
-        if: steps.updates.outputs.build_info_updated == 'true'
+        if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
         run: |
           git commit -m "build: Update build_info and generated files: $VERSION"
           git push origin main
@@ -64,7 +83,7 @@ jobs:
   
   build:
     needs: update-latest-build-info
-    if: success() && needs.update-latest-build-info.outputs.build_info_updated == 'true'
+    if: ${{ needs.update-latest-build-info.result == 'success' && needs.update-latest-build-info.outputs.build_info_updated == 'true' }}
     strategy:
       fail-fast: false
       matrix:
