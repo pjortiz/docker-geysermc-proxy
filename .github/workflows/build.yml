@@ -30,9 +30,9 @@ jobs:
         run: |
           # If the input branch is main, get the latest release version
           if [ "${{ github.event.inputs.branch }}" == "main" ]; then
-            VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
-          else if [ "${{ github.event.inputs.branch }}" == "prerelease" ]; then
-            VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
+            VERSION=$(curl -s -L https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          elif [ "${{ github.event.inputs.branch }}" == "prerelease" ]; then
+            VERSION=$(curl -s -L https://api.github.com/repos/${{ github.repository }}/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
           fi
 
       - name: Get Version from release
