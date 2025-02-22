@@ -13,7 +13,7 @@ REGISTRY_IMAGE=${REGISTRY_IMAGE:-geysermc-proxy}
 # Get the latest version info from GeyserMC API, and create the build info
 build_info=$(curl -f -sL https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest | jq -r --arg repo_version "$VERSION" --arg registry_image "$REGISTRY_IMAGE" '
     { 
-        name: "Build \($repo_version) with GeyserMC build (.build)", 
+        name: "Build \($repo_version) with GeyserMC build \(.build)", 
         version: "\($repo_version)",
         tags: [
             "\($registry_image):\($repo_version)-\(.build)",
