@@ -1,9 +1,9 @@
 {
-  "name": "Build refs/heads/main with GeyserMC build (.build)",
-  "version": "refs/heads/main",
+  "name": "Build local with GeyserMC build (.build)",
+  "version": "local",
   "tags": [
-    "portiz93/geysermc-proxy:refs/heads/main-767",
-    "portiz93/geysermc-proxy:refs/heads/main",
+    "portiz93/geysermc-proxy:local-767",
+    "portiz93/geysermc-proxy:local",
     "portiz93/geysermc-proxy:767",
     "portiz93/geysermc-proxy:latest"
   ],
