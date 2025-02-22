@@ -67,7 +67,7 @@ ENV DISABLE_COMPRESSION="true"
 
 # Install unzip
 RUN apt-get update && \
-    apt-get install -y gettext && \
+    apt-get install -y --no-install-recommends gettext && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
