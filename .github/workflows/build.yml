@@ -115,7 +115,11 @@ jobs:
 
       - name: Pre-build
         id: pre-build
-        run: ./.github/workflows/scripts/pre-build.sh
+        run: |
+          ./.github/workflows/scripts/pre-build.sh
+          build_info=$(jq -r '{ include: [(.)] }' build-info.json)
+          echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
+          echo "build_info=$build_info" # Sanity check
         env:
           VERSION: ${{ needs.get-version-from-event.outputs.version }}
           REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
@@ -134,9 +138,6 @@ jobs:
             echo "Changes detected"
             echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
           fi
-          build_info=$(jq -c '{ include: [(.)] }' build-info.json)
-          echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
-          echo "build_info=$build_info" # Sanity check
 
       - name: Commit and push changes
         if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
