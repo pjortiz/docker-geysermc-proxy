@@ -1,20 +1,63 @@
 name: Build
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *' # This runs the action every 24 hours
+    inputs:
+      branch:
+        type: choice
+        description: 'Branch to build from'
+        options:
+          - main
+          - prerelease
+        required: true
   release:
     types: [published]
+  schedule:
+    - cron: '0 0 * * *' # This runs the action every 24 hours
 
 env:
   REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy
 
 jobs:
-  update-latest-build-info:
+  get-version-from-event:
+    name: Get version from event
     runs-on: ubuntu-latest
     outputs:
-      build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
-      build_info: ${{ steps.pre-build.outputs.build_info }}
+      version: ${{ steps.set-version.outputs.version }}
+    steps:
+      - name: Get Version from dispatch
+        id: get-version-from-dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          # If the input branch is main, get the latest release version
+          if [ "${{ github.event.inputs.branch }}" == "main" ]; then
+            VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          else if [ "${{ github.event.inputs.branch }}" == "prerelease" ]; then
+            VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
+          fi
+
+      - name: Get Version from release
+        id: get-version-from-release
+        if: github.event_name == 'release'
+        run: |
+          echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+
+      - name: Get Version from schedule
+        id: get-version-from-schedule
+        if: github.event_name == 'schedule'
+        run: |
+          VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Set Final Version Output
+        id: set-version
+        if: env.VERSION != ''
+        run: echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  get-branch-from-event:
+    name: Get branch from event
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.branch.outputs.branch }}
     steps:
       - name: Determine branch from Release event
         if: ${{ github.event_name == 'release' }}
@@ -25,25 +68,35 @@ jobs:
           else
             echo "BRANCH=prerelease" >> $GITHUB_ENV
           fi
-      - name: Determine branch default
-        if: ${{ github.event_name != 'release' }}
-        id: branch-default
+      
+      - name: Determine branch from dispatch
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: branch-dispatch
+        run: |
+          echo "BRANCH=${{ github.event.inputs.branch }}" >> $GITHUB_ENV
+
+      - name: Determine branch from schedule
+        if: ${{ github.event_name == 'schedule' }}
+        id: branch-schedule
         run: |
           echo "BRANCH=main" >> $GITHUB_ENV
+      
+      - name: Set Final Branch Output
+        id: branch
+        run: echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
-      - name: Get Version
-        run: |
-          if [ "${{ github.event_name }}" == "release" ]; then
-            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-          else
-            echo "VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)" >> $GITHUB_ENV
-          fi
-
+  update-latest-build-info:
+    name: Update latest build info
+    needs: [get-version-from-event, get-branch-from-event]
+    runs-on: ubuntu-latest
+    outputs:
+      build_info_updated: ${{ steps.pre-build.outputs.build_info_updated }}
+      build_info: ${{ steps.pre-build.outputs.build_info }}
+    steps:
       - name: Checkout repository
-        if: ${{ always() && steps.*.outputs.BRANCH != '' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.*.outputs.BRANCH }}
+          ref: ${{ needs.get-branch-from-event.outputs.branch }}
           fetch-depth: 0
  
       - name: Set up Python
@@ -54,6 +107,9 @@ jobs:
       - name: Pre-build
         id: pre-build
         run: ./.github/workflows/scripts/pre-build.sh
+        env:
+          VERSION: ${{ needs.get-version-from-event.outputs.version }}
+          REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
 
       - name: Check for build info updates
         id: updates
@@ -70,8 +126,6 @@ jobs:
             echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
             echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
           fi
-        env:
-          REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
 
       - name: Commit and push changes
         if: ${{ steps.updates.outputs.build_info_updated == 'true' }}
@@ -83,9 +137,9 @@ jobs:
   
   build:
     needs: update-latest-build-info
-    if: ${{ needs.update-latest-build-info.result == 'success' && needs.update-latest-build-info.outputs.build_info_updated == 'true' }}
+    if: ${{ needs.update-latest-build-info.result == 'success' && ( github.event_name != 'schedule' || needs.update-latest-build-info.outputs.build_info_updated == 'true' ) }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include: ${{ fromJson(needs.update-latest-build-info.outputs.build_info) }}
     name: ${{ matrix.name }}
