@@ -1,8 +1,8 @@
-ARG JAVA_VERSION=17
-FROM openjdk:${JAVA_VERSION}-slim AS build
+FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+ARG JAVA_VERSION=17
 ARG IMAGE_VERSION=local
 ARG GEYSER_VERSION=latest
 ARG GEYSER_BUILD=latest
@@ -67,12 +67,21 @@ ENV USE_DIRECT_CONNECTION="true"
 ENV DISABLE_COMPRESSION="true"
 
 
-# Install dependencies
-RUN apt-get update
-RUN dpkg --configure -a
-RUN apt-get install -y --no-install-recommends gettext
-RUN apt-get autoremove -y
-RUN rm -rf /var/lib/apt/lists/*
+# Install java 17 and other dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        openjdk-${JAVA_VERSION}-jre-headless \
+        gettext-base && \
+    apt-get autoremove -y --purge && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Set JAVA_HOME (Optional but recommended)
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Verify Java installation
+RUN java -version
 
 # Download Geyser Zip file
 ADD $GEYSER_DOWNLOAD_URL /tmp/Geyser.jar
