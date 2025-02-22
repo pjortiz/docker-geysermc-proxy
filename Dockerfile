@@ -65,11 +65,12 @@ ENV USE_DIRECT_CONNECTION="true"
 ENV DISABLE_COMPRESSION="true"
 
 
-# Install unzip
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gettext && \
-    apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
+# Install dependencies
+RUN apt-get update
+RUN dpkg --configure -a
+RUN apt-get install -y --no-install-recommends gettext
+RUN apt-get autoremove -y
+RUN rm -rf /var/lib/apt/lists/*
 
 # Download Geyser Zip file
 ADD $GEYSER_DOWNLOAD_URL /tmp/Geyser.jar
