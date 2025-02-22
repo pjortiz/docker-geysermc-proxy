@@ -1,6 +1,8 @@
 ARG JAVA_VERSION=17
 FROM openjdk:${JAVA_VERSION}-slim AS build
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 ARG IMAGE_VERSION=local
 ARG GEYSER_VERSION=latest
 ARG GEYSER_BUILD=latest
