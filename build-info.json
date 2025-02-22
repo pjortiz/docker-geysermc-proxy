@@ -1,9 +1,9 @@
 {
-  "name": "Build local with GeyserMC build (.build)",
-  "version": "local",
+  "name": "Build 1.0.0 with GeyserMC build (.build)",
+  "version": "1.0.0",
   "tags": [
-    "portiz93/geysermc-proxy:local-767",
-    "portiz93/geysermc-proxy:local",
+    "portiz93/geysermc-proxy:1.0.0-767",
+    "portiz93/geysermc-proxy:1.0.0",
     "portiz93/geysermc-proxy:767",
     "portiz93/geysermc-proxy:latest"
   ],
