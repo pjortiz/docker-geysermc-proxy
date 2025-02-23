@@ -20,6 +20,7 @@ TODO
 
 ## Environment Variables
 Take a look [here](https://geysermc.org/wiki/geyser/setup/) for how to set up Geyser.
+
 Variable | Config file Equivalent | Default
 --- | --- | ---
 ${GEYSER_ENV_VARS_TABLE}
