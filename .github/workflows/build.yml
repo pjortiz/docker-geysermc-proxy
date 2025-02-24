@@ -12,7 +12,7 @@ on:
   release:
     types: [published]
   schedule:
-    - cron: '0 0 * * *' # This runs the action every 24 hours
+    - cron: '0 5 * * *' # This runs the action every 24 hours
 
 env:
   REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy

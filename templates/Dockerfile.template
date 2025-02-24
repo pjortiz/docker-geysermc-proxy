@@ -79,8 +79,6 @@ RUN ls -lsa /Geyser
 
 # The Geyser config directory
 VOLUME /Geyser/data
-# The Floodgate key.pem directory
-VOLUME /Geyser/floodgate 
 
 # Set the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
