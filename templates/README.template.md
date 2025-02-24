@@ -18,6 +18,10 @@ TODO
 TODO
 ```
 
+## Floodgate
+
+If you intend to use Floodgate, you will need to mount the Floodgate key.pem file directly to `/Geyser/floodgate/key.pem` in the container.
+
 ## Environment Variables
 Take a look [here](https://geysermc.org/wiki/geyser/setup/) for how to set up Geyser.
 
@@ -25,7 +29,7 @@ Variable | Config file Equivalent | Default
 --- | --- | ---
 ${GEYSER_ENV_VARS_TABLE}
 
-## License 
+## License
 
 All software and files not created or managed by GeyserMC are licensed under the MIT license.
 
