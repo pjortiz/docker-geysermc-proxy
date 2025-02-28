@@ -205,7 +205,16 @@ jobs:
             GEYSER_BUILD=${{ matrix.geyser.build }}
             GEYSER_DOWNLOAD_URL=${{ matrix.geyser.artifact.url }}
             GEYSER_JAR_SHA256=${{ matrix.geyser.artifact.sha256 }}
-            
+
+  update-dockerhub-readme:
+    name: Update Docker Hub README
+    needs: [update-latest-build-info, build]
+    if: ${{ needs.build.result == 'success'  || (needs.build.result == 'skipped' && needs.update-latest-build-info.result == 'success') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4    
+        
       - name: Update Docker Hub README
         uses: peter-evans/dockerhub-description@v4
         with:
