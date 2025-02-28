@@ -161,7 +161,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   build:
-    needs: update-latest-build-info
+    needs: [get-branch-from-event, update-latest-build-info]
     if: ${{ needs.update-latest-build-info.outputs.build_info_updated == 'true' }}
     strategy:
       fail-fast: true
@@ -171,6 +171,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get-branch-from-event.outputs.branch }}
+          fetch-depth: 0    
 
       - name: Pull latest
         run: git pull origin main
