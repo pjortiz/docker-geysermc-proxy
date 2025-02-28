@@ -11,8 +11,16 @@ on:
         required: true
   release:
     types: [published]
+  workflow_run: 
+    workflows: ["Semantic release"]
+    types:
+      - completed
   schedule:
     - cron: '0 5 * * *' # This runs the action every 24 hours
+
+concurrency:
+  group: Build-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   REGISTRY_IMAGE: ${{ vars.DOCKERHUB_USERNAME }}/geysermc-proxy
@@ -46,7 +54,7 @@ jobs:
 
       - name: Get Version from schedule
         id: get-version-from-schedule
-        if: github.event_name == 'schedule'
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_run'
         run: |
           VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
@@ -85,7 +93,7 @@ jobs:
           echo "BRANCH=${{ github.event.inputs.branch }}" >> $GITHUB_ENV
 
       - name: Determine branch from schedule
-        if: ${{ github.event_name == 'schedule' }}
+        if: ${{ github.event_name == 'schedule'  || github.event_name == 'workflow_run' }}
         id: branch-schedule
         run: |
           echo "BRANCH=main" >> $GITHUB_ENV
