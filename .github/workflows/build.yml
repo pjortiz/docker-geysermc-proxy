@@ -216,12 +216,15 @@ jobs:
 
   update-dockerhub-readme:
     name: Update Docker Hub README
-    needs: [update-latest-build-info, build]
+    needs: [get-branch-from-event, update-latest-build-info, build]
     if: ${{ needs.build.result == 'success'  || (needs.build.result == 'skipped' && needs.update-latest-build-info.result == 'success') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4    
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.get-branch-from-event.outputs.branch }}
+          fetch-depth: 0    
         
       - name: Update Docker Hub README
         uses: peter-evans/dockerhub-description@v4
