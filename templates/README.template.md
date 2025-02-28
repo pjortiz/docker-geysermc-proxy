@@ -1,4 +1,10 @@
-# docker-geysermc-proxy (Unofficial)
+# Docker GeyserMC Proxy (Unofficial)
+[![Build](https://github.com/pjortiz/docker-geysermc-proxy/actions/workflows/build.yml/badge.svg)](https://github.com/pjortiz/docker-geysermc-proxy/actions/workflows/build.yml) 
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=version&label=Image%20Version)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=geyser.version&label=API%20Version)
+![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=geyser.build&label=Build)
+
+
 
 ## Description
 
@@ -9,13 +15,40 @@ This image contains the GeyserMC Standalone Proxy, which allows you to connect t
 ### Command Line
 
 ```bash
-TODO
+docker run -d \
+  --name geyser-proxy \
+  --restart unless-stopped \
+  -e REMOTE_ADDRESS=mc \
+  -e REMOTE_AUTH_TYPE=floodgate \
+  -v geyser-data:/Geyser/data \
+  -v /path/to/floodgate/key.pem:/Geyser/floodgate/key.pem \
+  portiz93/geysermc-proxy:latest
 ```
 
 ### Docker Compose
 
 ```yaml
-TODO
+volumes:
+  geyser-data:
+
+geyser-proxy:
+  image: portiz93/geysermc-proxy:latest
+#   Add your Minecraft server service to wait for it to be healthy
+#   depends_on:
+#     mc: 
+#     condition: service_healthy
+  environment:
+    # The name of the Minecraft server service or the IP address of the server
+    REMOTE_ADDRESS: mc 
+    # The port of the Minecraft server. Default is 25565
+    # REMOTE_PORT: 25565
+    # The type of authentication to use. Default is online
+    REMOTE_AUTH_TYPE: floodgate
+  restart: unless-stopped
+  volumes:
+    - geyser-data:/Geyser/data
+    # Replace local path with the path to your Floodgate key.pem file
+    - /path/to/floodgate/key.pem:/Geyser/floodgate/key.pem
 ```
 
 ## Floodgate
