@@ -3,6 +3,7 @@
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=version&label=Image%20Version)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=geyser.version&label=API%20Version)
 ![Dynamic JSON Badge](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fpjortiz%2Fdocker-geysermc-proxy%2Frefs%2Fheads%2Fmain%2Fbuild-info.json&query=geyser.build&label=Build)
+![Docker Pulls](https://img.shields.io/docker/pulls/portiz93/geysermc-proxy)
 
 
 
