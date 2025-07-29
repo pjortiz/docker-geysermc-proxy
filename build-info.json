@@ -1,21 +1,21 @@
 {
-  "name": "Build 1.0.0 with GeyserMC build 893",
+  "name": "Build 1.0.0 with GeyserMC build 894",
   "version": "1.0.0",
   "tags": [
-    "portiz93/geysermc-proxy:1.0.0-893",
+    "portiz93/geysermc-proxy:1.0.0-894",
     "portiz93/geysermc-proxy:1.0.0",
-    "portiz93/geysermc-proxy:893",
+    "portiz93/geysermc-proxy:894",
     "portiz93/geysermc-proxy:latest"
   ],
   "geyser": {
     "version": "2.8.2",
-    "build": 893,
-    "head_sha": "70bdb7f66a44f1c415e0e36a84a2a196d18c0f9c",
-    "time": "2025-07-27T18:45:47.011Z",
+    "build": 894,
+    "head_sha": "4746651aeaef5e4d58a58b7bf17125e388d87d7a",
+    "time": "2025-07-28T09:28:07.516Z",
     "artifact": {
       "name": "Geyser-Standalone.jar",
-      "url": "https://download.geysermc.org/v2/projects/geyser/versions/2.8.2/builds/893/downloads/standalone",
-      "sha256": "a388c51d94b6b65579bda6885bcc76577a4536f5b99a0697c565ad17e0f653ab"
+      "url": "https://download.geysermc.org/v2/projects/geyser/versions/2.8.2/builds/894/downloads/standalone",
+      "sha256": "eed7735240fd675a0e73f7c6857e0674cba2a24da36ca809df9724988462108d"
     }
   }
 }
