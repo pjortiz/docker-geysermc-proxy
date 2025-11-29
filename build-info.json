@@ -1,9 +1,9 @@
 {
-  "name": "Build null with GeyserMC build 999",
-  "version": "null",
+  "name": "Build 1.0.0 with GeyserMC build 999",
+  "version": "1.0.0",
   "tags": [
-    "portiz93/geysermc-proxy:null-999",
-    "portiz93/geysermc-proxy:null",
+    "portiz93/geysermc-proxy:1.0.0-999",
+    "portiz93/geysermc-proxy:1.0.0",
     "portiz93/geysermc-proxy:999",
     "portiz93/geysermc-proxy:latest"
   ],
