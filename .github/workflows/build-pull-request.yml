@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/build-pull-request.yml'
       - '.github/workflows/scripts/**'
       - 'templates/Dockerfile.template'
       - 'scripts/**'
