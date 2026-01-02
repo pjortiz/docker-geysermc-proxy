@@ -5,6 +5,7 @@ on:
     branches:
       - main
     paths:
+      - '.github/workflows/build-pull-request.yml'
       - '.github/workflows/scripts/**'
       - 'templates/Dockerfile.template'
       - 'scripts/**'
@@ -44,7 +45,9 @@ jobs:
           cat templates/geyser_config.template.yml >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
           
-          echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
+          build_info=$(jq -c '{ include: [(.)] }' build-info.json)
+          echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
+          echo "build_info=$build_info" # Sanity check
           
           echo "DOCKERFILE<<EOF" >> "$GITHUB_OUTPUT"
           cat Dockerfile >> "$GITHUB_OUTPUT"
@@ -100,22 +103,27 @@ jobs:
     if: success()
     strategy:
       fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.test-update-latest-build-info.outputs.build_info) }}
+      matrix: ${{ fromJson(needs.test-update-latest-build-info.outputs.build_info) }}
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pull latest
-        run: git pull origin main
+      # - name: Pull latest
+      #   run: git pull origin main
 
       - name: Set Generated files
         run: |
-          echo "${{ needs.test-update-latest-build-info.outputs.DOCKERFILE }}" > Dockerfile
-          echo "${{ needs.test-update-latest-build-info.outputs.GEYSER_CONFIG_TEMPLATE }}" > templates/geyser_config.template.yml
-      
+          mkdir -p templates
+          cat > Dockerfile << 'EOF'
+          ${{ needs.test-update-latest-build-info.outputs.DOCKERFILE }}
+          EOF
+          
+          cat > templates/geyser_config.template.yml << 'EOF'
+          ${{ needs.test-update-latest-build-info.outputs.GEYSER_CONFIG_TEMPLATE }}
+          EOF
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
