@@ -12,17 +12,15 @@ ENV_MAP_PATH: str = ".temp/env_map.json"
 # keys to skip from templating
 SKIP_KEYS = [
     "bedrock.port",
-    "bedrock.clone-remote-port",
     "config-version",
-    "floodgate-key-file"
+    "advanced.floodgate-key-file"
 ]
 
 OVERRIDE_DEFAULTS: dict = {
-    "remote.forward-hostname": True,
-    "metrics.enabled": False,
-    "floodgate-key-file": "/Geyser/floodgate/key.pem",
-    "saved-user-logins": "",
-    "bedrock.proxy-protocol-whitelisted-ips": ""
+    "java.forward-hostname": True,
+    "enable-metrics": False,
+    "advanced.floodgate-key-file": "/Geyser/floodgate/key.pem",
+    "saved-user-logins": ""
 }
 
 KEYS: dict = {} # store the keys
