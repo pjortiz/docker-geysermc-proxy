@@ -115,9 +115,15 @@ jobs:
 
       - name: Set Generated files
         run: |
-          echo "${{ needs.test-update-latest-build-info.outputs.DOCKERFILE }}" > Dockerfile
-          echo "${{ needs.test-update-latest-build-info.outputs.GEYSER_CONFIG_TEMPLATE }}" > templates/geyser_config.template.yml
-      
+          mkdir -p templates
+          cat > Dockerfile << 'EOF'
+          ${{ needs.test-update-latest-build-info.outputs.DOCKERFILE }}
+          EOF
+          
+          cat > templates/geyser_config.template.yml << 'EOF'
+          ${{ needs.test-update-latest-build-info.outputs.GEYSER_CONFIG_TEMPLATE }}
+          EOF
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
