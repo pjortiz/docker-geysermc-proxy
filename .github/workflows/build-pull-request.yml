@@ -44,7 +44,9 @@ jobs:
           cat templates/geyser_config.template.yml >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
           
-          echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
+          build_info=$(jq -c '{ include: [(.)] }' build-info.json)
+          echo "build_info=$build_info" >> "$GITHUB_OUTPUT"
+          echo "build_info=$build_info" # Sanity check
           
           echo "DOCKERFILE<<EOF" >> "$GITHUB_OUTPUT"
           cat Dockerfile >> "$GITHUB_OUTPUT"
