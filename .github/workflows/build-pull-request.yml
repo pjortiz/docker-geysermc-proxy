@@ -28,13 +28,27 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up JRE
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Pre-build
         id: pre-build
         run: |
           ./.github/workflows/scripts/pre-build.sh || exit 1
-          echo "GEYSER_CONFIG_TEMPLATE=$(cat templates/geyser_config.template.yml)" >> "$GITHUB_OUTPUT"
+          
+          # Use EOF for multiline outputs
+          echo "GEYSER_CONFIG_TEMPLATE<<EOF" >> "$GITHUB_OUTPUT"
+          cat templates/geyser_config.template.yml >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          
           echo "build_info=\"$(jq -c '[(.)]' build-info.json)\"" >> "$GITHUB_OUTPUT"
-          echo "DOCKERFILE=$(cat Dockerfile)" >> "$GITHUB_OUTPUT"
+          
+          echo "DOCKERFILE<<EOF" >> "$GITHUB_OUTPUT"
+          cat Dockerfile >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
         env:
           REGISTRY_IMAGE: ${{ env.REGISTRY_IMAGE }}
 

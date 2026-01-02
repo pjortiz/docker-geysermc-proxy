@@ -121,6 +121,12 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Set up JRE
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Pre-build
         id: pre-build
         run: |
