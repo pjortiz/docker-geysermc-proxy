@@ -103,8 +103,7 @@ jobs:
     if: success()
     strategy:
       fail-fast: false
-      matrix:
-        include: ${{ fromJson(needs.test-update-latest-build-info.outputs.build_info) }}
+      matrix: ${{ fromJson(needs.test-update-latest-build-info.outputs.build_info) }}
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     steps:
