@@ -182,7 +182,9 @@ jobs:
           fetch-depth: 0    
 
       - name: Pull latest
-        run: git pull origin main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
