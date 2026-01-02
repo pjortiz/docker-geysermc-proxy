@@ -110,8 +110,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pull latest
-        run: git pull origin main
+      # - name: Pull latest
+      #   run: git pull origin main
 
       - name: Set Generated files
         run: |
