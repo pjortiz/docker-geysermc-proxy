@@ -19,8 +19,8 @@ This image contains the GeyserMC Standalone Proxy, which allows you to connect t
 docker run -d \
   --name geyser-proxy \
   --restart unless-stopped \
-  -e REMOTE_ADDRESS=mc \
-  -e REMOTE_AUTH_TYPE=floodgate \
+  -e JAVA_ADDRESS=mc \
+  -e JAVA_AUTH_TYPE=floodgate \
   -v geyser-data:/Geyser/data \
   -v /path/to/floodgate/key.pem:/Geyser/floodgate/key.pem \
   portiz93/geysermc-proxy:latest
@@ -40,11 +40,11 @@ geyser-proxy:
 #     condition: service_healthy
   environment:
     # The name of the Minecraft server service or the IP address of the server
-    REMOTE_ADDRESS: mc 
+    JAVA_ADDRESS: mc 
     # The port of the Minecraft server. Default is 25565
-    # REMOTE_PORT: 25565
+    # JAVA_PORT: 25565
     # The type of authentication to use. Default is online
-    REMOTE_AUTH_TYPE: floodgate
+    JAVA_AUTH_TYPE: floodgate
   restart: unless-stopped
   volumes:
     - geyser-data:/Geyser/data
