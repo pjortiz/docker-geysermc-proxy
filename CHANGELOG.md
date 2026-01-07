@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/pjortiz/docker-geysermc-proxy/compare/2.0.0...2.0.1) (2026-01-07)
+
+
+### Bug Fixes
+
+* README.md with old env vars ([4f933a2](https://github.com/pjortiz/docker-geysermc-proxy/commit/4f933a2db4cb570a9fd8b91d597f83d62314f971))
+
 # [2.0.0](https://github.com/pjortiz/docker-geysermc-proxy/compare/1.0.0...2.0.0) (2026-01-02)
 
 
