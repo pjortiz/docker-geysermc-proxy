@@ -30,6 +30,27 @@ jobs:
       - name: Generate README.md
         run: .github/workflows/scripts/generate-readme.sh
 
+      - name: Update Docker Hub repository README
+        env:
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_REPO: geysermc-proxy
+        run: |
+          if [ -z "$DOCKERHUB_TOKEN" ] || [ -z "$DOCKERHUB_USERNAME" ]; then
+            echo "Skipping Docker Hub update: missing credentials"
+            exit 0
+          fi
+
+          JWT=$(curl -s -H "Content-Type: application/json" -X POST -d "{\"username\":\"$DOCKERHUB_USERNAME\",\"password\":\"$DOCKERHUB_TOKEN\"}" https://hub.docker.com/v2/users/login/ | jq -r .token)
+          if [ -z "$JWT" ] || [ "$JWT" = "null" ]; then
+            echo "Failed to obtain Docker Hub JWT"
+            exit 1
+          fi
+
+          DATA=$(jq -n --arg fd "$(cat README.md)" '{full_description: $fd}')
+          curl -s -X PATCH -H "Authorization: JWT $JWT" -H "Content-Type: application/json" -d "$DATA" "https://hub.docker.com/v2/repositories/${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}/" || { echo "Docker Hub update failed"; exit 1; }
+          echo "Docker Hub README updated successfully"
+
       - name: Commit updated README.md
         uses: EndBug/add-and-commit@v9
         with:
