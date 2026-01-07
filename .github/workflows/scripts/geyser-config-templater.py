@@ -44,14 +44,8 @@ def save_key(key: list[str], placeholder: str, value=None, comment=""):
 def convert_key_to_placeholder(key: list[str]):
     return "_".join(key).upper().replace("-", "_")
 
-# def replace_preserving_ca(old_value, new_value):
-#     if hasattr(old_value, "ca") and hasattr(new_value, "ca"):
-#         new_value.ca = old_value.ca
-#     return new_value
-
 def construct_placeholder_list(key: list[str], value, comment: str = None, fString: str = "$(echo \"[{0}]\" | sed -r 's/\\s?,\\s?|\\s?,?\\s?\\n\\s?/, /g')"):
     return fString.format(construct_placeholder_string(key, value, comment))
-    # return replace_preserving_ca(value, LiteralScalarString(fString.format(construct_placeholder_string(key, value, comment))))
 
 def construct_placeholder_string(key: list[str], value, comment: str = "", fString: str = "${{{0}}}"):
     placeholder = convert_key_to_placeholder(key)
