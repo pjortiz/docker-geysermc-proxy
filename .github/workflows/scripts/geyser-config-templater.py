@@ -38,8 +38,8 @@ yaml.default_flow_style = True  # Ensure arrays are output with [ and ]
 def get_key_path(key: list[str]):
     return ".".join(key)
 
-def save_key(key: list[str], placeholder: str, value=None, comment=None):
-    KEYS[placeholder] = {get_key_path(key): value, "comment": comment}
+def save_key(key: list[str], placeholder: str, value=None, comment=""):
+    KEYS[placeholder] = {get_key_path(key): value, "comment": comment or ""}
     
 def convert_key_to_placeholder(key: list[str]):
     return "_".join(key).upper().replace("-", "_")
@@ -53,7 +53,7 @@ def construct_placeholder_list(key: list[str], value, comment: str = None, fStri
     return fString.format(construct_placeholder_string(key, value, comment))
     # return replace_preserving_ca(value, LiteralScalarString(fString.format(construct_placeholder_string(key, value, comment))))
 
-def construct_placeholder_string(key: list[str], value, comment: str = None, fString: str = "${{{0}}}"):
+def construct_placeholder_string(key: list[str], value, comment: str = "", fString: str = "${{{0}}}"):
     placeholder = convert_key_to_placeholder(key)
     key_path = get_key_path(key)
     default = OVERRIDE_DEFAULTS.get(key_path) if key_path in OVERRIDE_DEFAULTS.keys() else ", ".join(value) if isinstance(value, list) else value

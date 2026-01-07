@@ -59,8 +59,8 @@ If you intend to use Floodgate, you will need to mount the Floodgate key.pem fil
 ## Environment Variables
 Take a look [here](https://geysermc.org/wiki/geyser/setup/) for how to set up Geyser.
 
-Variable | Config file Equivalent | Default | Description
---- | --- | --- | ---
+Variable | Default | Description
+--- | --- | ---
 ${GEYSER_ENV_VARS_TABLE}
 
 ## License
