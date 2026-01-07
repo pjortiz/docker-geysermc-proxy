@@ -1,0 +1,186 @@
+{
+    "BEDROCK_ADDRESS": {
+        "bedrock.address": "0.0.0.0",
+        "comment": "The IP address that Geyser will bind on to listen for incoming Bedrock connections. Generally, you should only change this if you want to limit what IPs can connect to your server."
+    },
+    "BEDROCK_PORT": {
+        "bedrock.port": 19132,
+        "comment": "The port that will Geyser will listen on for incoming Bedrock connections. Since Minecraft: Bedrock Edition uses UDP, this port must allow UDP traffic."
+    },
+    "JAVA_ADDRESS": {
+        "java.address": "127.0.0.1",
+        "comment": "The IP address of the Java Edition server."
+    },
+    "JAVA_PORT": {
+        "java.port": 25565,
+        "comment": "The port of the Java Edition server."
+    },
+    "JAVA_AUTH_TYPE": {
+        "java.auth-type": "online",
+        "comment": "What type of authentication Bedrock players will be checked against when logging into the Java server. Can be \"floodgate\" (see https://wiki.geysermc.org/floodgate/), \"online\", or \"offline\"."
+    },
+    "JAVA_FORWARD_HOSTNAME": {
+        "java.forward-hostname": true,
+        "comment": "Whether to forward the hostname that the Bedrock client used to connect over to the Java server. This is designed to be used for forced hosts on proxies."
+    },
+    "MOTD_PRIMARY_MOTD": {
+        "motd.primary-motd": "Geyser",
+        "comment": "The MOTD that will be broadcasted to Minecraft: Bedrock Edition clients. This is irrelevant if \"passthrough-motd\" is set to true. If either of these are empty, the respective string will default to \"Geyser\""
+    },
+    "MOTD_SECONDARY_MOTD": {
+        "motd.secondary-motd": "Another Geyser server.",
+        "comment": null
+    },
+    "MOTD_PASSTHROUGH_MOTD": {
+        "motd.passthrough-motd": true,
+        "comment": "Whether Geyser should relay the MOTD from the Java server to Bedrock players."
+    },
+    "MOTD_MAX_PLAYERS": {
+        "motd.max-players": 100,
+        "comment": "Maximum amount of players that can connect. This is only visual, and is only applied if passthrough-motd is disabled."
+    },
+    "MOTD_PASSTHROUGH_PLAYER_COUNTS": {
+        "motd.passthrough-player-counts": true,
+        "comment": "Whether to relay the player count and max players from the Java server to Bedrock players."
+    },
+    "MOTD_PING_PASSTHROUGH_INTERVAL": {
+        "motd.ping-passthrough-interval": 3,
+        "comment": "How often to ping the Java server to refresh MOTD and player count, in seconds."
+    },
+    "GAMEPLAY_SERVER_NAME": {
+        "gameplay.server-name": "Geyser",
+        "comment": "The server name that will be sent to Minecraft: Bedrock Edition clients. This is visible in both the pause menu and the settings menu."
+    },
+    "GAMEPLAY_SHOW_COOLDOWN": {
+        "gameplay.show-cooldown": "title",
+        "comment": "Allow a fake cooldown indicator to be sent. Bedrock players otherwise do not see a cooldown as they still use 1.8 combat. Please note: if the cooldown is enabled, some users may see a black box during the cooldown sequence, like below: https://geysermc.org/img/external/cooldown_indicator.png This can be disabled by going into Bedrock settings under the accessibility tab and setting \"Text Background Opacity\" to 0 This setting can be set to \"title\", \"actionbar\" or \"disabled\""
+    },
+    "GAMEPLAY_COMMAND_SUGGESTIONS": {
+        "gameplay.command-suggestions": true,
+        "comment": "Bedrock clients can freeze when opening up the command prompt for the first time if given a lot of commands. Disabling this will prevent command suggestions from being sent and solve freezing for Bedrock clients."
+    },
+    "GAMEPLAY_SHOW_COORDINATES": {
+        "gameplay.show-coordinates": true,
+        "comment": "Controls if coordinates are shown to players."
+    },
+    "GAMEPLAY_DISABLE_BEDROCK_SCAFFOLDING": {
+        "gameplay.disable-bedrock-scaffolding": false,
+        "comment": "Whether Bedrock players are blocked from performing their scaffolding-style bridging."
+    },
+    "GAMEPLAY_NETHER_ROOF_WORKAROUND": {
+        "gameplay.nether-roof-workaround": false,
+        "comment": "Bedrock prevents building and displaying blocks above Y127 in the Nether. This config option works around that by changing the Nether dimension ID to the End ID. The main downside to this is that the entire Nether will have the same red fog rather than having different fog for each biome."
+    },
+    "GAMEPLAY_EMOTES_ENABLED": {
+        "gameplay.emotes-enabled": true,
+        "comment": "Whether to show Bedrock Edition emotes to other Bedrock Edition players."
+    },
+    "GAMEPLAY_UNUSABLE_SPACE_BLOCK": {
+        "gameplay.unusable-space-block": "minecraft:barrier",
+        "comment": "Which item to use to mark unavailable slots in a Bedrock player inventory. Examples of this are the 2x2 crafting grid while in creative, or custom inventory menus with sizes different from the usual 3x9. A barrier block is the default item. This config option can be set to any Bedrock item identifier. If you want to set this to a custom item, make sure that you specify the item in the following format: \"geyser_custom:<mapping-name>\""
+    },
+    "GAMEPLAY_ENABLE_CUSTOM_CONTENT": {
+        "gameplay.enable-custom-content": true,
+        "comment": "Whether to add any items and blocks which normally does not exist in Bedrock Edition. This should only need to be disabled if using a proxy that does not use the \"transfer packet\" style of server switching. If this is disabled, furnace minecart items will be mapped to hopper minecart items. Geyser's block, item, and skull mappings systems will also be disabled. This option requires a restart of Geyser in order to change its setting."
+    },
+    "GAMEPLAY_FORCE_RESOURCE_PACKS": {
+        "gameplay.force-resource-packs": true,
+        "comment": "Force clients to load all resource packs if there are any. If set to false, it allows the user to connect to the server even if they don't want to download the resource packs."
+    },
+    "GAMEPLAY_ENABLE_INTEGRATED_PACK": {
+        "gameplay.enable-integrated-pack": true,
+        "comment": "Whether to automatically serve a resource pack that is required for some Geyser features to all connecting Bedrock players. If enabled, force-resource-packs will be enabled."
+    },
+    "GAMEPLAY_FORWARD_PLAYER_PING": {
+        "gameplay.forward-player-ping": false,
+        "comment": "Whether to forward player ping to the server. While enabling this will allow Bedrock players to have more accurate ping, it may also cause players to time out more easily."
+    },
+    "GAMEPLAY_XBOX_ACHIEVEMENTS_ENABLED": {
+        "gameplay.xbox-achievements-enabled": false,
+        "comment": "Allows Xbox achievements to be unlocked. If a player types in an unknown command, they will receive a message that states cheats are disabled. Otherwise, commands work as expected."
+    },
+    "GAMEPLAY_MAX_VISIBLE_CUSTOM_SKULLS": {
+        "gameplay.max-visible-custom-skulls": 128,
+        "comment": "The maximum number of custom skulls to be displayed per player. Increasing this may decrease performance on weaker devices. A value of 0 will disable all custom skulls. Setting this to -1 will cause all custom skulls to be displayed regardless of distance or number."
+    },
+    "GAMEPLAY_CUSTOM_SKULL_RENDER_DISTANCE": {
+        "gameplay.custom-skull-render-distance": 32,
+        "comment": "The radius in blocks around the player in which custom skulls are displayed."
+    },
+    "DEFAULT_LOCALE": {
+        "default-locale": "system",
+        "comment": "The default locale if we don't have the one the client requested. If set to \"system\", the system's language will be used."
+    },
+    "LOG_PLAYER_IP_ADDRESSES": {
+        "log-player-ip-addresses": true,
+        "comment": "Whether player IP addresses will be logged by the server."
+    },
+    "SAVED_USER_LOGINS": {
+        "saved-user-logins": "",
+        "comment": "For online mode authentication type only. Stores a list of Bedrock player usernames that should have their Java Edition account saved after login. This saves a token that can be reused to authenticate the player later. This does not save emails or passwords, but you should still be cautious when adding to this list and giving others access to this Geyser instance's files. Removing a name from this list will delete its cached login information on the next Geyser startup. The file that tokens will be saved in is in the same folder as this config, named \"saved-refresh-tokens.json\"."
+    },
+    "PENDING_AUTHENTICATION_TIMEOUT": {
+        "pending-authentication-timeout": 120,
+        "comment": "For online mode authentication type only. Specify how many seconds to wait while user authorizes Geyser to access their Microsoft account. User is allowed to disconnect from the server during this period."
+    },
+    "NOTIFY_ON_NEW_BEDROCK_UPDATE": {
+        "notify-on-new-bedrock-update": true,
+        "comment": "Whether to alert the console and operators that a new Geyser version is available that supports a Bedrock version that this Geyser version does not support. It's recommended to keep this option enabled, as many Bedrock platforms auto-update."
+    },
+    "ADVANCED_CACHE_IMAGES": {
+        "advanced.cache-images": 0,
+        "comment": "Specify how many days player skin images will be cached to disk to save downloading them from the internet. A value of 0 is disabled. (Default: 0)"
+    },
+    "ADVANCED_SCOREBOARD_PACKET_THRESHOLD": {
+        "advanced.scoreboard-packet-threshold": 20,
+        "comment": "Geyser updates the Scoreboard after every Scoreboard packet, but when Geyser tries to handle a lot of scoreboard packets per second, this can cause serious lag. This option allows you to specify after how many Scoreboard packets per seconds the Scoreboard updates will be limited to four updates per second."
+    },
+    "ADVANCED_ADD_TEAM_SUGGESTIONS": {
+        "advanced.add-team-suggestions": true,
+        "comment": "Whether Geyser should send team names in command suggestions. Disable this if you have a lot of teams used that you don't need as suggestions."
+    },
+    "ADVANCED_RESOURCE_PACK_URLS": {
+        "advanced.resource-pack-urls": "",
+        "comment": "A list of remote resource pack urls to send to the Bedrock client for downloading. The Bedrock client is very picky about how these are delivered - please see our wiki page for further info: https://geysermc.org/wiki/geyser/packs/"
+    },
+    "ADVANCED_JAVA_USE_HAPROXY_PROTOCOL": {
+        "advanced.java.use-haproxy-protocol": false,
+        "comment": "Whether to enable HAPROXY protocol when connecting to the Java server. This is useful only when: 1) Your Java server supports HAPROXY protocol (it probably doesn't) 2) You run Velocity or BungeeCord with the option enabled in the proxy's main config. IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!"
+    },
+    "ADVANCED_BEDROCK_BROADCAST_PORT": {
+        "advanced.bedrock.broadcast-port": 0,
+        "comment": "The port to broadcast to Bedrock clients with the MOTD that they should use to connect to the server. A value of 0 will broadcast the port specified above. DO NOT change this unless Geyser runs on a different port than the one that is used to connect."
+    },
+    "ADVANCED_BEDROCK_COMPRESSION_LEVEL": {
+        "advanced.bedrock.compression-level": 6,
+        "comment": "How much to compress network traffic to the Bedrock client. The higher the number, the more CPU usage used, but the smaller the bandwidth used. Does not have any effect below -1 or above 9. Set to -1 to disable."
+    },
+    "ADVANCED_BEDROCK_USE_HAPROXY_PROTOCOL": {
+        "advanced.bedrock.use-haproxy-protocol": false,
+        "comment": "Whether to expect HAPROXY protocol for connecting Bedrock clients. This is useful only when you are running a UDP reverse proxy in front of your Geyser instance. IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!"
+    },
+    "ADVANCED_BEDROCK_HAPROXY_PROTOCOL_WHITELISTED_IPS": {
+        "advanced.bedrock.haproxy-protocol-whitelisted-ips": "",
+        "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-proxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
+    },
+    "ADVANCED_BEDROCK_MTU": {
+        "advanced.bedrock.mtu": 1400,
+        "comment": "The internet supports a maximum MTU of 1492 but could cause issues with packet fragmentation. 1400 is the default."
+    },
+    "ADVANCED_BEDROCK_VALIDATE_BEDROCK_LOGIN": {
+        "advanced.bedrock.validate-bedrock-login": true,
+        "comment": "This option disables the auth step Geyser performs for connecting Bedrock players. It can be used to allow connections from ProxyPass and WaterdogPE. In these cases, make sure that users cannot directly connect to this Geyser instance. See https://www.spigotmc.org/wiki/firewall-guide/ for assistance - and use UDP instead of TCP. Disabling Bedrock authentication for other use-cases is NOT SUPPORTED, as it allows anyone to spoof usernames, and is therefore a security risk. All Floodgate functionality (including skin uploading and account linking) will also not work when this option is disabled."
+    },
+    "ENABLE_METRICS": {
+        "enable-metrics": false,
+        "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
+    },
+    "METRICS_UUID": {
+        "metrics-uuid": "e68ca90b-f521-4119-a061-2ed61f2c7196",
+        "comment": "The bstats metrics uuid. Do not touch!"
+    },
+    "DEBUG_MODE": {
+        "debug-mode": false,
+        "comment": "If debug messages should be sent through console"
+    }
+}

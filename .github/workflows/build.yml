@@ -152,7 +152,7 @@ jobs:
             echo "Build changes detected"
             echo "build_info_updated=true" >> "$GITHUB_OUTPUT"
           fi
-          git add README.md
+          git add README.md env_map.json
 
       - name: Commit and push changes
         run: |

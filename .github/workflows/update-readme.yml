@@ -1,0 +1,40 @@
+name: Update README from template
+
+on:
+  push:
+    paths:
+      - 'templates/README.template.md'
+      - '.github/workflows/scripts/generate-readme.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq gettext-base
+
+      - name: Make generate script executable
+        run: chmod +x .github/workflows/scripts/generate-readme.sh
+
+      - name: Generate README.md
+        run: .github/workflows/scripts/generate-readme.sh
+
+      - name: Commit updated README.md
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions
+          author_email: github-actions@users.noreply.github.com
+          message: "chore: update README.md from template"
+          add: "README.md"
+          branch: ${{ github.ref_name }}
