@@ -51,9 +51,9 @@
         "gameplay.server-name": "Geyser",
         "comment": "The server name that will be sent to Minecraft: Bedrock Edition clients. This is visible in both the pause menu and the settings menu."
     },
-    "GAMEPLAY_SHOW_COOLDOWN": {
-        "gameplay.show-cooldown": "title",
-        "comment": "Allow a fake cooldown indicator to be sent. Bedrock players otherwise do not see a cooldown as they still use 1.8 combat. Please note: if the cooldown is enabled, some users may see a black box during the cooldown sequence, like below: https://geysermc.org/img/external/cooldown_indicator.png This can be disabled by going into Bedrock settings under the accessibility tab and setting \"Text Background Opacity\" to 0 This setting can be set to \"title\", \"actionbar\" or \"disabled\""
+    "GAMEPLAY_COOLDOWN_TYPE": {
+        "gameplay.cooldown-type": "crosshair",
+        "comment": "Allow a fake cooldown indicator to be sent. Bedrock players otherwise do not see a cooldown as they still use 1.8 combat. Please note: with the integrated pack disabled, some users may see a black box during the cooldown sequence, like below: https://geysermc.org/img/external/cooldown_indicator.png This can be resolved by enabling the integrated pack, or by going into Bedrock settings under the accessibility tab and setting \"Text Background Opacity\" to 0. This setting can be set to \"crosshair\", \"hotbar\", or \"disabled\""
     },
     "GAMEPLAY_COMMAND_SUGGESTIONS": {
         "gameplay.command-suggestions": true,
@@ -74,6 +74,10 @@
     "GAMEPLAY_EMOTES_ENABLED": {
         "gameplay.emotes-enabled": true,
         "comment": "Whether to show Bedrock Edition emotes to other Bedrock Edition players."
+    },
+    "GAMEPLAY_BLOCK_LEGACY_CODES": {
+        "gameplay.block-legacy-codes": true,
+        "comment": "Whether to remove legacy text formatting codes sent by Bedrock players. Unlike on Java Edition, typing section signs for legacy color codes is possible on Bedrock Edition. See https://minecraft.wiki/w/Formatting_codes for further information."
     },
     "GAMEPLAY_UNUSABLE_SPACE_BLOCK": {
         "gameplay.unusable-space-block": "minecraft:barrier",
@@ -163,6 +167,10 @@
         "advanced.bedrock.haproxy-protocol-whitelisted-ips": "",
         "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-proxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
     },
+    "ADVANCED_BEDROCK_USE_WATERDOGPE_FORWARDING": {
+        "advanced.bedrock.use-waterdogpe-forwarding": false,
+        "comment": "Should be enabled if this Geyser instance is behind a WaterdogPE proxy. If enabled, Geyser will use the xuid / address sent from WaterdogPE and reject clients that do not send it."
+    },
     "ADVANCED_BEDROCK_MTU": {
         "advanced.bedrock.mtu": 1400,
         "comment": "The internet supports a maximum MTU of 1492 but could cause issues with packet fragmentation. 1400 is the default."
@@ -176,7 +184,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "496e2f29-e9aa-428d-94a4-3845d85aa86c",
+        "metrics-uuid": "f09e8c28-e942-4199-b42a-610976fce32e",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
