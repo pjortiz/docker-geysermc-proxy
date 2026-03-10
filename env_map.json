@@ -184,7 +184,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "8561e27f-cfb1-46e4-bbc0-c6696dc94402",
+        "metrics-uuid": "d8a133ae-b4d0-436b-9fa1-161e78242089",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
