@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -23,7 +23,7 @@ ENV GEYSER_BUILD=${GEYSER_BUILD}
 # Geyser Settings
 ${GEYSER_ENV_VARS}
 
-# Install Java and other dependencies
+# Install OpenJDK and other dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         openjdk-${JAVA_VERSION}-jre-headless \

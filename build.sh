@@ -2,6 +2,7 @@
 
 source .venv/Scripts/activate
 # Run pre-build.sh
+rm -rf ./.temp
 ./.github/workflows/scripts/pre-build.sh || exit 1
 
 # Build the Docker image
@@ -27,7 +28,7 @@ echo "GEYSER_JAR_SHA256=$GEYSER_JAR_SHA256"
 
 
 # # docker build . --no-cache --progress=plain \
-docker build . \
+sudo docker build . \
     --build-arg JAVA_VERSION=$JAVA_VERSION \
     --build-arg GEYSER_VERSION=$GEYSER_VERSION \
     --build-arg GEYSER_BUILD=$GEYSER_BUILD \
