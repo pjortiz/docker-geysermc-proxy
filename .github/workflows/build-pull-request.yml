@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Pre-build
         id: pre-build
@@ -142,7 +142,7 @@ jobs:
             ${{ join(matrix.tags, '
             ') }}
           build-args: |
-            JAVA_VERSION=17
+            JAVA_VERSION=21
             IMAGE_VERSION=${{ matrix.version }}
             GEYSER_VERSION=${{ matrix.geyser.version }}
             GEYSER_BUILD=${{ matrix.geyser.build }}

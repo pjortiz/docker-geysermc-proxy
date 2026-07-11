@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG JAVA_VERSION=17
+ARG JAVA_VERSION=21
 ARG IMAGE_VERSION=local
 ARG GEYSER_VERSION=latest
 ARG GEYSER_BUILD=latest
@@ -71,7 +71,7 @@ ENV METRICS_UUID="059c7c82-7697-442f-bd33-1cd36c595a04"
 ENV DEBUG_MODE="false"
 
 
-# Install java 17 and other dependencies
+# Install Java and other dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         openjdk-${JAVA_VERSION}-jre-headless \
@@ -81,7 +81,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set JAVA_HOME (Optional but recommended)
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-${JAVA_VERSION}-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 # Verify Java installation

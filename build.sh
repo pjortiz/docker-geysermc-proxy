@@ -10,7 +10,7 @@ tags_opts=$(jq -r '[.tags[] | "-t \(.)"] | join(" ")' build-info.json)
 
 echo "tags_opts=${tags_opts}"
 
-JAVA_VERSION=17
+JAVA_VERSION=21
 IMAGE_VERSION=$(jq -r '.version' build-info.json)
 GEYSER_VERSION=$(jq -r '.geyser.version' build-info.json)
 GEYSER_BUILD=$(jq -r '.geyser.build' build-info.json)
