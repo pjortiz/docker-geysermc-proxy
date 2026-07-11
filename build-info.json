@@ -1,11 +1,11 @@
 {
-  "name": "Build local with GeyserMC build 1190",
-  "version": "local",
+  "name": "Build 2.0.2 with GeyserMC build 1190",
+  "version": "2.0.2",
   "tags": [
-    "geysermc-proxy:local-1190",
-    "geysermc-proxy:local",
-    "geysermc-proxy:1190",
-    "geysermc-proxy:latest"
+    "portiz93/geysermc-proxy:2.0.2-1190",
+    "portiz93/geysermc-proxy:2.0.2",
+    "portiz93/geysermc-proxy:1190",
+    "portiz93/geysermc-proxy:latest"
   ],
   "geyser": {
     "version": "2.11.0",

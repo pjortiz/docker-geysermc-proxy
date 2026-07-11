@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/pjortiz/docker-geysermc-proxy/compare/2.0.1...2.0.2) (2026-07-11)
+
+
+### Bug Fixes
+
+* upgrade to Java 21 ([a620d97](https://github.com/pjortiz/docker-geysermc-proxy/commit/a620d977564ccda50324b1802a78e51302f2acd1))
+
 ## [2.0.1](https://github.com/pjortiz/docker-geysermc-proxy/compare/2.0.0...2.0.1) (2026-01-07)
 
 
