@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -67,11 +67,11 @@ ENV ADVANCED_BEDROCK_USE_WATERDOGPE_FORWARDING="false"
 ENV ADVANCED_BEDROCK_MTU="1400"
 ENV ADVANCED_BEDROCK_VALIDATE_BEDROCK_LOGIN="true"
 ENV ENABLE_METRICS="false"
-ENV METRICS_UUID="9a402442-a672-4555-a4bc-1009a0390411"
+ENV METRICS_UUID="19877240-f41f-4272-80a2-427e485f8b51"
 ENV DEBUG_MODE="false"
 
 
-# Install Java and other dependencies
+# Install OpenJDK and other dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         openjdk-${JAVA_VERSION}-jre-headless \
