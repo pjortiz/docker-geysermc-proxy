@@ -165,7 +165,7 @@
     },
     "ADVANCED_BEDROCK_HAPROXY_PROTOCOL_WHITELISTED_IPS": {
         "advanced.bedrock.haproxy-protocol-whitelisted-ips": "",
-        "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-proxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
+        "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-haproxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
     },
     "ADVANCED_BEDROCK_USE_WATERDOGPE_FORWARDING": {
         "advanced.bedrock.use-waterdogpe-forwarding": false,
@@ -184,7 +184,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "f054e352-b4ed-41a6-9f07-f37eccd69c20",
+        "metrics-uuid": "52c18901-f6e8-43de-86f7-1c03b1c2dab2",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
