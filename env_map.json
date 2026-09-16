@@ -5,7 +5,43 @@
     },
     "BEDROCK_PORT": {
         "bedrock.port": 19132,
-        "comment": "The port that will Geyser will listen on for incoming Bedrock connections. Since Minecraft: Bedrock Edition uses UDP, this port must allow UDP traffic."
+        "comment": "The port that Geyser will listen on for incoming Bedrock connections. Built-in signaling uses this port over TCP, and RakNet uses it over UDP."
+    },
+    "BEDROCK_WEBRTC_PORT": {
+        "bedrock.webrtc-port": 0,
+        "comment": "The UDP port that NetherNet connections use. 0 means the same port as above. If raknet and nethernet transport mode are used in parallel, then this port has to be different to the port above."
+    },
+    "BEDROCK_TRANSPORT": {
+        "bedrock.transport": "raknet",
+        "comment": "How Bedrock players connect. Changes require a restart. \"nethernet\" uses NetherNet (with signaling), which is the new connection method for Bedrock Edition. \"both\" accepts both NetherNet and RakNet. They each need their own UDP port: see \"webrtc-port\". \"raknet\" only accepts RakNet, the now deprecated connection method which will be removed in the future."
+    },
+    "BEDROCK_SIGNALING_MODE": {
+        "bedrock.signaling.mode": "builtin",
+        "comment": "How Bedrock players find this server over NetherNet. \"builtin\": Geyser runs a local signaling server on the Bedrock port over TCP. This option is not compatible with running the Java server on the Bedrock port. \"nxs\": Geyser registers with the external signaling service configured below. \"hybrid\": uses both \"builtin\" and \"nxs\". \"none\" turns signaling off."
+    },
+    "BEDROCK_SIGNALING_BUILTIN_HTTPS_CERTIFICATE": {
+        "bedrock.signaling.builtin.https.certificate": "",
+        "comment": "Path to a TLS certificate: either a PEM chain (with its key in \"private-key\"), or a PKCS12 file (leave \"private-key\" empty). Players reaching signaling over TLS are not shown the \"trust on first use\" prompt. Leave this empty to only serve plain HTTP."
+    },
+    "BEDROCK_SIGNALING_BUILTIN_HTTPS_PRIVATE_KEY": {
+        "bedrock.signaling.builtin.https.private-key": "",
+        "comment": "PEM private key for \"certificate\". Leave empty when that is a PKCS12 file."
+    },
+    "BEDROCK_SIGNALING_BUILTIN_HTTPS_PASSWORD": {
+        "bedrock.signaling.builtin.https.password": "",
+        "comment": "Password for the PKCS12 file, or for the PEM key if it is encrypted. Use \"file:/path/to/password\" to read it from a file instead, which is safer than writing it here."
+    },
+    "BEDROCK_SIGNALING_NXS_ADVERTISE_ADDRESSES": {
+        "bedrock.signaling.nxs.advertise-addresses": "",
+        "comment": "Additional public UDP endpoints players can reach this server on, e.g. 198.51.100.1:19133 or [2001:db8::1]:19133. Port forwarding is not set up for you."
+    },
+    "BEDROCK_SIGNALING_NXS_TOKEN": {
+        "bedrock.signaling.nxs.token": "",
+        "comment": "Access token for the signaling service, or file:/path/to/token to read it from a file. Leave empty to register without an account."
+    },
+    "BEDROCK_SIGNALING_NXS_ENDPOINT": {
+        "bedrock.signaling.nxs.endpoint": "https://agent.warden.cloud",
+        "comment": "Address of the external signaling service (NXS). Defaults to warden."
     },
     "JAVA_ADDRESS": {
         "java.address": "127.0.0.1",
@@ -161,11 +197,11 @@
     },
     "ADVANCED_BEDROCK_USE_HAPROXY_PROTOCOL": {
         "advanced.bedrock.use-haproxy-protocol": false,
-        "comment": "Whether to expect HAPROXY protocol for connecting Bedrock clients. This is useful only when you are running a UDP reverse proxy in front of your Geyser instance. IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!"
+        "comment": "Whether to expect HAPROXY protocol for connecting Bedrock clients. This is useful only when you are running a reverse proxy in front of your Geyser instance. This applies to RakNet and to built-in signaling. Signaling connections without a PROXY header are still accepted. IF YOU DON'T KNOW WHAT THIS IS, DON'T TOUCH IT!"
     },
     "ADVANCED_BEDROCK_HAPROXY_PROTOCOL_WHITELISTED_IPS": {
         "advanced.bedrock.haproxy-protocol-whitelisted-ips": "",
-        "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-haproxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
+        "comment": "A list of allowed HAPROXY protocol speaking proxy IP addresses/subnets. Only effective when \"use-haproxy-protocol\" is enabled, and should really only be used when you are not able to use a proper firewall (usually true with shared hosting providers etc.). Built-in signaling also only trusts forwarded player addresses from these proxies. Keeping this list empty means there is no IP address whitelist. IP addresses, subnets, and links to plain text files are supported."
     },
     "ADVANCED_BEDROCK_USE_WATERDOGPE_FORWARDING": {
         "advanced.bedrock.use-waterdogpe-forwarding": false,
@@ -184,7 +220,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "9fef1950-6e71-4ad0-ac37-a8ca0ca42287",
+        "metrics-uuid": "0442bbba-ee02-45f5-8343-5ef336de43cc",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
