@@ -19,6 +19,10 @@
         "bedrock.signaling.mode": "builtin",
         "comment": "How Bedrock players find this server over NetherNet. \"builtin\": Geyser runs a local signaling server on the Bedrock port over TCP. This option is not compatible with running the Java server on the Bedrock port. \"nxs\": Geyser registers with the external signaling service configured below. \"hybrid\": uses both \"builtin\" and \"nxs\". \"none\" turns signaling off."
     },
+    "BEDROCK_SIGNALING_BUILTIN_ADVERTISE_ADDRESSES": {
+        "bedrock.signaling.builtin.advertise-addresses": "",
+        "comment": "Addresses players can reach NetherNet on, e.g. 198.51.100.1 or [2001:db8::1]:19133. Without a port, the NetherNet UDP port is used. An address this machine does not hold is announced as the public side of a NAT forwarding that port here. Port forwarding is not set up for you. Leave empty to announce the bound address, or every local address when bound to 0.0.0.0."
+    },
     "BEDROCK_SIGNALING_BUILTIN_HTTPS_CERTIFICATE": {
         "bedrock.signaling.builtin.https.certificate": "",
         "comment": "Path to a TLS certificate: either a PEM chain (with its key in \"private-key\"), or a PKCS12 file (leave \"private-key\" empty). Players reaching signaling over TLS are not shown the \"trust on first use\" prompt. Leave this empty to only serve plain HTTP."
@@ -220,7 +224,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "3ac6b0d3-c5c5-4edb-a6b8-6972fb71cb12",
+        "metrics-uuid": "abac9c77-c3ef-4a9e-be40-fbe9e0af84b0",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
