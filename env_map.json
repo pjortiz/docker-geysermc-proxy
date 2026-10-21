@@ -9,7 +9,7 @@
     },
     "BEDROCK_WEBRTC_PORT": {
         "bedrock.webrtc-port": 0,
-        "comment": "The UDP port used for NetherNet connections. When set to 0, Geyser uses the \"port\" value set above."
+        "comment": "The UDP port used for NetherNet connections. When set to 0, Geyser uses the \"port\" value set above. Players connect to it directly, so forward it when behind a router. With \"nxs\" signaling and assisted-joins off, they cannot connect otherwise."
     },
     "BEDROCK_TRANSPORT": {
         "bedrock.transport": "raknet",
@@ -19,9 +19,13 @@
         "bedrock.signaling.mode": "builtin",
         "comment": "How Bedrock players find this server when using NetherNet. \"builtin\": Geyser runs its own signaling server on the Bedrock port, over TCP. This does not work if the Java server uses the same port (for example with \"clone-remote-port\"). In that case, Geyser automatically falls back to \"nxs\". \"nxs\": Geyser registers this server with the external signaling service configured in \"nxs.endpoint\" below. \"hybrid\": uses \"builtin\" and \"nxs\" at the same time."
     },
-    "BEDROCK_SIGNALING_BUILTIN_ADVERTISE_ADDRESSES": {
-        "bedrock.signaling.builtin.advertise-addresses": "",
-        "comment": "The addresses Geyser's signaling server sends to connecting players for the NetherNet WebRTC connection, e.g. 198.51.100.1 or [2001:db8::1]:19133. If no port is given, the configured NetherNet UDP port is used. You can list an address this machine does not have, such as your public IP, if your router forwards that port to this machine. You need to set up the port forwarding yourself. Leave empty to use the \"address\" Geyser binds to, or every local address if that is 0.0.0.0."
+    "BEDROCK_SIGNALING_ADVERTISE_ADDRESSES": {
+        "bedrock.signaling.advertise-addresses": "",
+        "comment": "The addresses sent to connecting players for the NetherNet WebRTC connection, by both built-in and external signaling, e.g. play.example.com, 198.51.100.1 or [2001:db8::1]:19133. If no port is given, the NetherNet UDP port is used. A host name is looked up when signaling starts, and signaling does not start if it does not resolve. You can list an address this machine does not have, such as your public IP, if your router forwards that port to this machine. You need to set up the port forwarding yourself. Leave empty to use this machine's own addresses, plus the public address found with \"stun-discovery\"."
+    },
+    "BEDROCK_SIGNALING_STUN_DISCOVERY": {
+        "bedrock.signaling.stun-discovery": true,
+        "comment": "Finds this server's public address through STUN when \"advertise-addresses\" is empty. Built-in signaling asks public STUN servers, and the external signaling service asks its own."
     },
     "BEDROCK_SIGNALING_BUILTIN_HTTPS_CERTIFICATE": {
         "bedrock.signaling.builtin.https.certificate": "",
@@ -34,10 +38,6 @@
     "BEDROCK_SIGNALING_BUILTIN_HTTPS_PASSWORD": {
         "bedrock.signaling.builtin.https.password": "",
         "comment": "Password for the PKCS12 file, or for the PEM private key if it is encrypted. Leave empty if there is none. You can also use \"file:/path/to/password\" to read it from a file, which is safer than writing it here."
-    },
-    "BEDROCK_SIGNALING_NXS_ADVERTISE_ADDRESSES": {
-        "bedrock.signaling.nxs.advertise-addresses": "",
-        "comment": "The addresses which the external signaling server sends to connecting players for the NetherNet WebRTC connection, e.g. 198.51.100.1:19133 or [2001:db8::1]:19133. If no port is given, the configured NetherNet UDP port is used. You can list an address this machine does not have, such as your public IP, if your router forwards that port to this machine. You need to set up the port forwarding yourself. Leave empty to use this machine's own addresses, or the ones found with \"stun-discovery\" in the advanced section."
     },
     "BEDROCK_SIGNALING_NXS_TOKEN": {
         "bedrock.signaling.nxs.token": "",
@@ -223,6 +223,10 @@
         "advanced.bedrock.validate-bedrock-login": true,
         "comment": "This option disables the auth step Geyser performs for connecting Bedrock players. It can be used to allow connections from ProxyPass and WaterdogPE. In these cases, make sure that users cannot directly connect to this Geyser instance. See https://www.spigotmc.org/wiki/firewall-guide/ for assistance - and use UDP instead of TCP. Disabling Bedrock authentication for other use-cases is NOT SUPPORTED, as it allows anyone to spoof usernames, and is therefore a security risk. All Floodgate functionality (including skin uploading and account linking) will also not work when this option is disabled."
     },
+    "ADVANCED_BEDROCK_NETHERNET_DEBUG": {
+        "advanced.bedrock.nethernet-debug": false,
+        "comment": "Whether to log NetherNet's debug messages, from libdatachannel and NetherNet itself, such as what signaling and STUN discovery do. Useful when players cannot connect over NetherNet."
+    },
     "ADVANCED_NXS_ASSISTED_JOINS": {
         "advanced.nxs.assisted-joins": false,
         "comment": "Lets the signaling service help players connect when they cannot reach this server directly, for example when the server is behind a NAT without port forwarding."
@@ -230,10 +234,6 @@
     "ADVANCED_NXS_CONNECTION_CHECKS": {
         "advanced.nxs.connection-checks": true,
         "comment": "Lets the signaling service check from several regions that players can reach this server, and stop offering addresses that fail."
-    },
-    "ADVANCED_NXS_STUN_DISCOVERY": {
-        "advanced.nxs.stun-discovery": true,
-        "comment": "Finds this server's public address through the signaling service's STUN servers when it has none of its own. Not used when \"advertise-addresses\" is set."
     },
     "ADVANCED_NXS_DEREGISTER_ON_SHUTDOWN": {
         "advanced.nxs.deregister-on-shutdown": false,
@@ -244,7 +244,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "cbe6f44b-5f69-4c28-94fd-dc6c5bdf385f",
+        "metrics-uuid": "8e4283e9-81d6-448a-b7e2-8306a0d6d127",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {

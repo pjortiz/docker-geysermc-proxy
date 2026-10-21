@@ -22,6 +22,8 @@ bedrock:
   port: ${BEDROCK_PORT}
 
   # The UDP port used for NetherNet connections. When set to 0, Geyser uses the "port" value set above.
+  # Players connect to it directly, so forward it when behind a router. With "nxs" signaling and
+  # assisted-joins off, they cannot connect otherwise.
   webrtc-port: ${BEDROCK_WEBRTC_PORT}
 
   # How Bedrock players can connect. Changes require a restart.
@@ -40,15 +42,20 @@ bedrock:
     # "hybrid": uses "builtin" and "nxs" at the same time.
     mode: ${BEDROCK_SIGNALING_MODE}
 
+    # The addresses sent to connecting players for the NetherNet WebRTC connection, by both built-in and external signaling,
+    # e.g. play.example.com, 198.51.100.1 or [2001:db8::1]:19133. If no port is given, the NetherNet UDP port is used.
+    # A host name is looked up when signaling starts, and signaling does not start if it does not resolve.
+    # You can list an address this machine does not have, such as your public IP, if your router forwards that port
+    # to this machine. You need to set up the port forwarding yourself.
+    # Leave empty to use this machine's own addresses, plus the public address found with "stun-discovery".
+    advertise-addresses: $(echo "[${BEDROCK_SIGNALING_ADVERTISE_ADDRESSES}]" | sed -r 's/\s?,\s?|\s?,?\s?\n\s?/, /g')
+
+    # Finds this server's public address through STUN when "advertise-addresses" is empty.
+    # Built-in signaling asks public STUN servers, and the external signaling service asks its own.
+    stun-discovery: ${BEDROCK_SIGNALING_STUN_DISCOVERY}
+
     # Settings for built-in signaling. Only used in the "builtin" and "hybrid" modes.
     builtin:
-      # The addresses Geyser's signaling server sends to connecting players for the NetherNet WebRTC connection, e.g. 198.51.100.1 or [2001:db8::1]:19133.
-      # If no port is given, the configured NetherNet UDP port is used.
-      # You can list an address this machine does not have, such as your public IP, if your router forwards that port
-      # to this machine. You need to set up the port forwarding yourself.
-      # Leave empty to use the "address" Geyser binds to, or every local address if that is 0.0.0.0.
-      advertise-addresses: $(echo "[${BEDROCK_SIGNALING_BUILTIN_ADVERTISE_ADDRESSES}]" | sed -r 's/\s?,\s?|\s?,?\s?\n\s?/, /g')
-
       # Settings for serving built-in signaling over HTTPS. When configured, HTTP will be rejected.
       https:
         # Path to a TLS certificate. This can be a PEM chain (put its key in "private-key"),
@@ -66,13 +73,6 @@ bedrock:
 
     # Settings for the external signaling service. Only used in the "nxs" and "hybrid" modes, or when built-in signaling cannot run.
     nxs:
-      # The addresses which the external signaling server sends to connecting players for the NetherNet WebRTC connection, e.g. 198.51.100.1:19133 or [2001:db8::1]:19133.
-      # If no port is given, the configured NetherNet UDP port is used.
-      # You can list an address this machine does not have, such as your public IP, if your router forwards that port
-      # to this machine. You need to set up the port forwarding yourself.
-      # Leave empty to use this machine's own addresses, or the ones found with "stun-discovery" in the advanced section.
-      advertise-addresses: $(echo "[${BEDROCK_SIGNALING_NXS_ADVERTISE_ADDRESSES}]" | sed -r 's/\s?,\s?|\s?,?\s?\n\s?/, /g')
-
       # Access token for the signaling service, or file:/path/to/token to read it from a file. Leave empty to register without an account.
       token: ${BEDROCK_SIGNALING_NXS_TOKEN}
 
@@ -295,6 +295,10 @@ advanced:
     # All Floodgate functionality (including skin uploading and account linking) will also not work when this option is disabled.
     validate-bedrock-login: ${ADVANCED_BEDROCK_VALIDATE_BEDROCK_LOGIN}
 
+    # Whether to log NetherNet's debug messages, from libdatachannel and NetherNet itself, such as what signaling
+    # and STUN discovery do. Useful when players cannot connect over NetherNet.
+    nethernet-debug: ${ADVANCED_BEDROCK_NETHERNET_DEBUG}
+
   # Advanced options for the external signaling service. Only used in the "nxs" and "hybrid" signaling modes.
   nxs:
     # Lets the signaling service help players connect when they cannot reach this server directly,
@@ -304,10 +308,6 @@ advanced:
     # Lets the signaling service check from several regions that players can reach this server,
     # and stop offering addresses that fail.
     connection-checks: ${ADVANCED_NXS_CONNECTION_CHECKS}
-
-    # Finds this server's public address through the signaling service's STUN servers when it has none of its own.
-    # Not used when "advertise-addresses" is set.
-    stun-discovery: ${ADVANCED_NXS_STUN_DISCOVERY}
 
     # Where this server is: "country" (a two-letter code), "city", "latitude" and "longitude".
     # Leave empty to let the signaling service estimate or configure it.
@@ -331,4 +331,4 @@ metrics-uuid: ${METRICS_UUID}
 debug-mode: ${DEBUG_MODE}
 
 # Do not change!
-config-version: 10
+config-version: 11
