@@ -12,7 +12,7 @@
         "comment": "The UDP port used for NetherNet connections. When set to 0, Geyser uses the \"port\" value set above. Players connect to it directly, so forward it when behind a router. With \"nxs\" signaling and assisted-joins off, they cannot connect otherwise."
     },
     "BEDROCK_TRANSPORT": {
-        "bedrock.transport": "raknet",
+        "bedrock.transport": "nethernet",
         "comment": "How Bedrock players can connect. Changes require a restart. \"nethernet\": the new connection method for Bedrock Edition. It needs signaling, see \"signaling\" below. \"both\": accepts NetherNet and RakNet. Each needs its own UDP port, see \"port\" and \"webrtc-port\". \"raknet\": the old connection method. Bedrock Edition will stop supporting it in a future version."
     },
     "BEDROCK_SIGNALING_MODE": {
@@ -244,7 +244,7 @@
         "comment": "bStats is a stat tracker that is entirely anonymous and tracks only basic information about Geyser, such as how many people are online, how many servers are using Geyser, what OS is being used, etc. You can learn more about bStats here: https://bstats.org/. https://bstats.org/plugin/server-implementation/GeyserMC"
     },
     "METRICS_UUID": {
-        "metrics-uuid": "cbd607ba-1aa2-4581-8d33-2ab294d85ada",
+        "metrics-uuid": "3e42ce52-934b-412c-9812-70cd2760860d",
         "comment": "The bstats metrics uuid. Do not touch!"
     },
     "DEBUG_MODE": {
